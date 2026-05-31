@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AgendamentoModal from '../components/AgendamentoModal';
+import axios from 'axios';
 
-const SERVICES = [
-  { id:1, emoji:'✂️', name:'Banho e Tosa', desc:'Banho completo + tosa na raça ou degrade', price:'R$ 80,00', duration:'~90 min' },
-  { id:2, emoji:'🛁', name:'Banho + Tosa Higiênica', desc:'Banho com escovação e aparo higiênico', price:'R$ 60,00', duration:'~75 min' },
-  { id:3, emoji:'🫧', name:'Banho', desc:'Banho completo com secagem e perfume', price:'R$ 40,00', duration:'~60 min' },
-  { id:4, emoji:'💧', name:'Hidratação na Pelagem', desc:'Tratamento intensivo de hidratação', price:'R$ 30,00', duration:'~45 min' },
-  { id:5, emoji:'🦷', name:'Escovação no Dente', desc:'Higiene bucal para pets', price:'R$ 15,00', duration:'~20 min' },
-];
+const API = 'http://localhost:3000/api';
+
+const EMOJIS = ['✂️', '🛁', '🫧', '💧', '🦷'];
 
 const scrollTo = (id) => {
   const el = document.getElementById(id);
@@ -25,6 +22,30 @@ const DIFERENCIAIS = [
 
 export default function LandingPage() {
   const [showModal, setShowModal] = useState(false);
+  const [services, setServices]   = useState([]);
+
+  useEffect(() => {
+    axios.get(`${API}/servicos`).then(r => {
+      const mapped = r.data.map((s, i) => ({
+        id:       s.id,
+        emoji:    EMOJIS[i % EMOJIS.length],
+        name:     s.nome,
+        desc:     s.descricao,
+        price:    `R$ ${Number(s.valor).toFixed(2).replace('.',',')}`,
+        duration: `~${s.duracao_minutos} min`,
+      }));
+      setServices(mapped);
+    }).catch(() => {
+      // fallback se servidor estiver desligado
+      setServices([
+        { id:1, emoji:'✂️', name:'Banho e Tosa',          desc:'Banho completo + tosa na raça',    price:'R$ 80,00', duration:'~90 min' },
+        { id:2, emoji:'🛁', name:'Banho + Tosa Higiìanica', desc:'Banho com aparo higiênico',          price:'R$ 60,00', duration:'~75 min' },
+        { id:3, emoji:'🫧', name:'Banho',                  desc:'Banho completo com secagem',        price:'R$ 40,00', duration:'~60 min' },
+        { id:4, emoji:'💧', name:'Hidratação na Pelagem',  desc:'Tratamento intensivo',               price:'R$ 30,00', duration:'~45 min' },
+        { id:5, emoji:'🦷', name:'Escovação no Dente',     desc:'Higiene bucal para pets',           price:'R$ 15,00', duration:'~20 min' },
+      ]);
+    });
+  }, []);
 
   const openWhatsApp = () => {
     window.open('https://wa.me/5511999999999?text=Olá! Quero agendar um serviço na PetCare.', '_blank');
@@ -122,7 +143,10 @@ export default function LandingPage() {
             <p className="section-desc">Oferecemos serviços completos de grooming e cuidados para o seu animal.</p>
           </div>
           <div className="services-grid">
-            {SERVICES.map(srv => (
+            {services.length === 0 && (
+              <div style={{ gridColumn:'1/-1', textAlign:'center', padding:40, color:'var(--text-muted)' }}>Carregando serviços...</div>
+            )}
+            {services.map(srv => (
               <div className="service-card" key={srv.id} onClick={() => setShowModal(true)}>
                 <span className="service-emoji">{srv.emoji}</span>
                 <div className="service-name">{srv.name}</div>
@@ -242,7 +266,7 @@ export default function LandingPage() {
       </footer>
 
       {/* Modal de Agendamento */}
-      {showModal && <AgendamentoModal onClose={() => setShowModal(false)} services={SERVICES} />}
+      {showModal && <AgendamentoModal onClose={() => setShowModal(false)} services={services} />}
     </div>
   );
 }

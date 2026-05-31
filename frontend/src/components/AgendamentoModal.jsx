@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
+const API = 'http://localhost:3000/api';
 
 const STEPS = ['Serviço', 'Data & Hora', 'Seus Dados', 'Pet', 'Confirmar'];
 
@@ -62,8 +65,39 @@ export default function AgendamentoModal({ onClose, services }) {
     window.open('https://wa.me/5511999999999?text=Olá! Quero usar a Van Pet para meu agendamento.', '_blank');
   };
 
-  const confirmAgendamento = () => {
-    setDone(true);
+  const [salvando, setSalvando] = useState(false);
+
+  const confirmAgendamento = async () => {
+    if (!selectedService || !selectedDate || !selectedTime) return;
+
+    // Montar data/hora no formato correto
+    const [h, m] = selectedTime.split(':');
+    const dataHora = new Date(selectedDate.date);
+    dataHora.setHours(Number(h), Number(m), 0, 0);
+
+    const payload = {
+      servico_id:  selectedService.id,
+      data_hora:   dataHora.toISOString(),
+      nome_tutor:  form.nome,
+      telefone:    form.telefone,
+      nome_pet:    pet.nome,
+      especie:     pet.especie,
+      porte:       pet.porte,
+      raca:        pet.raca,
+      observacoes: pet.obs || form.observacoes,
+      van_pet:     vanPet,
+    };
+
+    try {
+      setSalvando(true);
+      await axios.post(`${API}/agendamentos`, payload);
+      setDone(true);
+    } catch (err) {
+      alert('Erro ao salvar agendamento. Verifique se o servidor está rodando.');
+      console.error(err);
+    } finally {
+      setSalvando(false);
+    }
   };
 
   if (done) {
@@ -354,8 +388,8 @@ export default function AgendamentoModal({ onClose, services }) {
                 Próximo →
               </button>
             ) : (
-              <button className="btn btn-primary" onClick={confirmAgendamento}>
-                ✅ Confirmar Agendamento
+              <button className="btn btn-primary" onClick={confirmAgendamento} disabled={salvando}>
+                {salvando ? '⏳ Salvando...' : '✅ Confirmar Agendamento'}
               </button>
             )}
           </div>

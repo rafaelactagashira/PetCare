@@ -1,0 +1,98 @@
+{
+  "agendamentos": [
+    {
+      "id": 1,
+      "cliente_id": 1,
+      "servico_id": 1,
+      "data_hora": "2026-06-03T11:45:00.000Z",
+      "nome_tutor": "LucasPerrone",
+      "telefone": "(09) 99999-9999",
+      "nome_pet": "pet",
+      "especie": "cachorro",
+      "porte": "pequeno",
+      "raca": "golden",
+      "observacoes": "dwadsd",
+      "van_pet": false,
+      "status": "pendente",
+      "valor": 80,
+      "criado_em": "2026-05-31T19:03:55.192Z"
+    },
+    {
+      "id": 2,
+      "cliente_id": 2,
+      "servico_id": 4,
+      "data_hora": "2026-06-03T17:30:00.000Z",
+      "nome_tutor": "LucasPerrone",
+      "telefone": "(11) 11111-1111",
+      "nome_pet": "pet",
+      "especie": "cachorro",
+      "porte": "grande",
+      "raca": "golden",
+      "observacoes": "",
+      "van_pet": false,
+      "status": "pendente",
+      "valor": 30,
+      "criado_em": "2026-05-31T19:06:29.724Z"
+    }
+  ],
+  "clientes": [
+    {
+      "id": 1,
+      "nome": "LucasPerrone",
+      "telefone": "(09) 99999-9999",
+      "criado_em": "2026-05-31T19:03:55.192Z"
+    },
+    {
+      "id": 2,
+      "nome": "LucasPerrone",
+      "telefone": "(11) 11111-1111",
+      "criado_em": "2026-05-31T19:06:29.724Z"
+    }
+  ],
+  "servicos": [
+    {
+      "id": 1,
+      "nome": "Banho e Tosa",
+      "descricao": "Banho completo + tosa na raça ou degradê",
+      "valor": 80,
+      "duracao_minutos": 90,
+      "ativo": true
+    },
+    {
+      "id": 2,
+      "nome": "Banho + Tosa Higiênica",
+      "descricao": "Banho com escovação e aparo higiênico",
+      "valor": 60,
+      "duracao_minutos": 75,
+      "ativo": true
+    },
+    {
+      "id": 3,
+      "nome": "Banho",
+      "descricao": "Banho completo com secagem e perfume",
+      "valor": 40,
+      "duracao_minutos": 60,
+      "ativo": true
+    },
+    {
+      "id": 4,
+      "nome": "Hidratação na Pelagem",
+      "descricao": "Tratamento intensivo de hidratação",
+      "valor": 30,
+      "duracao_minutos": 45,
+      "ativo": true
+    },
+    {
+      "id": 5,
+      "nome": "Escovação no Dente",
+      "descricao": "Higiene bucal para pets",
+      "valor": 15,
+      "duracao_minutos": 20,
+      "ativo": true
+    }
+  ],
+  "nextId": {
+    "agendamento": 3,
+    "cliente": 3
+  }
+}

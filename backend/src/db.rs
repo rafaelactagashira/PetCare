@@ -6,7 +6,11 @@ pub async fn establish_connection() -> SqlitePool {
 
     SqlitePoolOptions::new()
         .max_connections(5)
-        .connect(&database_url)
+        .connect_with(
+            sqlx::sqlite::SqliteConnectOptions::new()
+                .filename("petcare.db")
+                .create_if_missing(true)
+        )
         .await
         .expect("Failed to connect to SQLite database")
 }
